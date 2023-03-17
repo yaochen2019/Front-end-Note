@@ -1,0 +1,174 @@
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background: whitesmoke;
+    font-weight: 400;
+    font-size: 1em;
+    font-family: 'Raleway', Arial, sans-serif;
+}
+
+.container,
+figure {
+    width: 450px;
+    height: 270px;
+}
+
+.container {
+    position: absolute;
+    perspective: 1000;
+    margin-top: -135px;
+    top: 50%;
+}
+
+.card {
+    position: relative;
+    transition: 0.6s;
+    transform-style: preserve-3d;
+}
+
+figure {
+    background: #2e5d5a;
+    color: #fff;
+    backface-visibility: hidden;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.6s;
+    transform-style: preserve-3d;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.9);
+}
+
+figure.front {
+    transform: rotateY(0deg);
+    z-index: 2;
+}
+
+figure.back,
+.card.flipped {
+    transform: rotateY(180deg);
+}
+
+
+figure .caption {
+
+    padding: 2em;
+    backface-visibility: hidden;
+}
+
+.front .caption {
+    font-size: 1.25em;
+}
+
+
+
+.front h2 {
+    word-spacing: -0.15em;
+    font-weight: 300;
+    font-size: 1.6em;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    color: #272833;
+    transition: transform 0.35s, color 0.35s;
+    transform: translate3d(0, -50%, 0);
+}
+
+.front h2 span {
+    font-weight: bold;
+}
+
+.front h2:after {
+    position: absolute;
+    bottom: -10px;
+    left: 70px;
+    right: 70px;
+    height: 2px;
+    background: #fff;
+    content: '';
+    transition: transform 0.35s;
+    transform: translate3d(-130%, 0, 0);
+}
+
+.front:hover h2 {
+    color: #fff;
+    -webkit-transform: translate3d(0, -50%, 0) translate3d(0, -40px, 0);
+    transform: translate3d(0, -50%, 0) translate3d(0, -40px, 0);
+}
+
+.front:hover h2:after {
+    transform: translate3d(0, 0, 0);
+}
+
+
+
+.back .caption:before,
+.back .caption:after {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    bottom: 30px;
+    left: 30px;
+    content: '';
+    opacity: 0;
+    transition: opacity 0.45s, transform 0.45s;
+    transition-delay: 1s;
+}
+
+
+
+.back .caption:before {
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #fff;
+    transform: scale(0, 1);
+}
+
+.back .caption:after {
+    border-right: 1px solid #fff;
+    border-left: 1px solid #fff;
+    transform: scale(1, 0);
+}
+/* 我的 */
+.card.flipped .back .caption:before,
+.card.flipped .back .caption:after {
+    opacity: .9;
+    transform: scale(1);
+}
+
+.back ul {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-weight: 300;
+    align-self: center;
+    list-style: none;
+    bottom: 40px;
+    left: 40px;
+    position: absolute;
+    opacity: 0;
+    font-weight: bold;
+    transition: opacity .35s, transform .35s;
+    transition-delay: .85s;
+    transform: translate3d(-40px, 0, 0);
+}
+
+.card.flipped .back ul {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+}
+
+.container {
+    left: 50%;
+    margin-left: -225px;
+}

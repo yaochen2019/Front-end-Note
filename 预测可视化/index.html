@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #main {
+            position: relative;
+            left: 570px;
+            top: 300px;
+
+        }
+
+        #submit {
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            left: 500px;
+            top: 200px;
+            width: 1000px;
+            height: 60px;
+        }
+
+        body {
+            background-color: rgb(27, 167, 132);
+        }
+
+        #local {
+            position: absolute;
+            left: 50px;
+            top: 400px;
+        }
+
+        #title {
+            position: absolute;
+            left: 750px;
+        }
+
+        #global {
+            position: absolute;
+            right: 10px;
+            top: 400px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1 id="title">水华预测及水环境分析系统</h1>
+    <div id="submit">
+        <div>
+            <span>选择预测目标站点：</span>
+            <select>
+                <option>辉湾中</option>
+                <option>罗家营</option>
+                <option>观音山中</option>
+                <option>观音山西</option>
+                <option>海口西</option>
+                <option>滇池南</option>
+            </select>
+        </div>
+        <div>
+            <span>选择融合的全局站点：</span>
+            
+                <input name="name[]" type="checkbox" value="1" />辉湾中
+
+                <input name="name[]" type="checkbox" value="2" />罗家营
+
+                <input name="name[]" type="checkbox" value="3" />观音山中
+
+                <input name="name[]" type="checkbox" value="4" />观音山西
+
+                <input name="name[]" type="checkbox" value="5" />海口西
+                <input name="name[]" type="checkbox" value="5" />滇池南
+           
+        </div>
+        <div>
+            <button>预测和分析</button>
+        </div>
+
+    </div>
+
+    <canvas width="800px" height="400px" id="main"></canvas>
+
+    <canvas width="500px" height="300px" id="local"></canvas>
+
+    <canvas width="500px" height="300px" id="global"></canvas>
+
+   
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+    <script type="module">
+        //预测图
+        var chartDom = document.getElementById('main');
+        var myChart = echarts.init(chartDom, 'dark');
+        console.log("myChart",myChart);
+        var option;
+        let base = +new Date(2021, 2, 1);
+        let oneDay = 24 * 3600 * 1000;
+        let date = [];
+        let data = [Math.random() * 7];
+        for (let i = 1; i < 2000; i++) {
+            var now = new Date((base += oneDay));
+            date.push([now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'));
+            if(Math.round((Math.random() - 0.5) * 20 + data[i - 1])<0){
+                data.push(-(Math.round((Math.random() - 0.5) * 10 + data[i - 1])));
+            }else{
+                data.push(Math.round((Math.random() - 0.5) * 10 + data[i - 1]));
+            }
+
+        }
+        option = {
+
+            tooltip: {
+                trigger: 'axis',
+                position: function (pt) {
+                    return [pt[0], '10%'];
+                }
+            },
+            title: {
+                left: 'center',
+                text: '叶绿素浓度预测图'
+            },
+            toolbox: {
+                feature: {
+                    dataZoom: {
+                        yAxisIndex: 'none'
+                    },
+                    restore: {},
+                    saveAsImage: {}
+                }
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: date
+            },
+            yAxis: {
+                type: 'value',
+                boundaryGap: [0, '100%']
+            },
+            dataZoom: [
+                {
+                    type: 'inside',
+                    start: 0,
+                    end: 10
+                },
+                {
+                    start: 0,
+                    end: 10
+                }
+            ],
+            series: [
+                {
+                    name: 'Fake Data',
+                    type: 'line',
+                    symbol: 'none',
+                    sampling: 'lttb',
+                    itemStyle: {
+                        color: 'rgb(255, 70, 131)'
+                    },
+                    areaStyle: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            {
+                                offset: 0,
+                                color: 'rgb(255, 158, 68)'
+                            },
+                            {
+                                offset: 1,
+                                color: 'rgb(255, 70, 131)'
+                            }
+                        ])
+                    },
+                    data: data
+                }
+            ]
+        };
+
+        //局部特征图
+
+        var chartDom2 = document.getElementById('local');
+        var myChart2 = echarts.init(chartDom2, 'dark');
+        var option2;
+
+        option2 = {
+            xAxis: {
+                type: 'category',
+                data: ['水温', 'PH', '溶解氧', '电导率', '浊度', '高猛酸盐', '氨氮', '总磷', '总氮', '叶绿素浓度'],
+                axisLabel:{
+                    interval:0,
+                    rotate:40,
+                    
+                  
+                }
+            },
+            yAxis: {
+                type: 'value'
+            },
+
+            title: {
+                left: 'center',
+                text: '各个指标的对水华影响的权重关系'
+            },
+            series: [
+                {
+                    data: [
+                        0.090,
+                        0.091,
+                        {
+                            value: 0.102,
+                            itemStyle: {
+                                color: '#a90000'
+                            }
+                        },
+                        0.060,
+                        {
+                            value: 0.137,
+                            itemStyle: {
+                                color: '#a90000'
+                            }
+                        },
+                        {
+                            value: 0.093,
+                            itemStyle: {
+                                color: '#a90000'
+                            }
+                        },
+                        {
+                            value: 0.119,
+                            itemStyle: {
+                                color: '#a90000'
+                            }
+                        },
+                        0.091,
+                        0.089,
+                        {
+                            value: 0.123,
+                            itemStyle: {
+                                color: '#a90000'
+                            }
+                        }
+                    ],
+                    type: 'bar'
+                }
+            ]
+        };
+
+        //全局特征图
+
+        var chartDom3 = document.getElementById('global');
+        var myChart3 = echarts.init(chartDom3, 'dark');
+        var option3;
+
+        option3 = {
+            title: {
+                text: '云南滇池湖泊'
+            },
+            tooltip: {},
+            animationDurationUpdate: 1500,
+            animationEasingUpdate: 'quinticInOut',
+            series: [
+                {
+                    type: 'graph',
+                    layout: 'none',
+                    symbolSize: 50,
+                    roam: true,
+                    label: {
+                        show: true
+                    },
+                    edgeSymbol: ['circle', 'arrow'],
+                    edgeSymbolSize: [5, 10],
+                    edgeLabel: {
+                        fontSize: 20
+                    },
+
+                    // {
+                    //         value: 200,
+                    //         itemStyle: {
+                    //             color: '#a90000'
+                    //         }
+                    //     }
+
+                    data: [
+                        {
+                            name: '观音山西',
+                            x: 300,
+                            y: 300,
+                           
+                        },
+                        {
+                            name: '海口西',
+                            x: 300,
+                            y: 400
+                        },
+                        {
+                            name: '辉湾中',
+                            x: 550,
+                            y: 100,
+                            itemStyle: {
+                                color: '#a90000'
+                            }
+                        },
+                        {
+                            name: '滇池南',
+                            x: 550,
+                            y: 500
+                        },
+                        {
+                            name: '观音山中',
+                            x: 550,
+                            y: 300,
+                            itemStyle: {
+                                color: '#FFFF00'
+                            }
+                        }
+                        ,
+                        {
+                            name: '罗家营',
+                            x: 800,
+                            y: 200
+                        }
+                    ],
+                    // links: [],
+                 
+                        
+                        
+                }
+            ]
+        };
+
+        option && myChart.setOption(option);
+
+
+        option3 && myChart3.setOption(option3);
+
+
+
+        option2 && myChart2.setOption(option2);
+    </script>
+</body>
+
+</html>

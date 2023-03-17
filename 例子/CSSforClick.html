@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            box-sizing: border-box;
+        }
+        .content{
+            width:200px;
+            height:200px;
+            background-color: pink;
+            color: blue;
+            transition: background-color 1s,color 1s;
+        }
+        #modeBtn{
+            width: 100px;
+            height:100px
+        }
+        #modeCheckBox{
+            display:none;
+        }
+        #modeCheckBox:checked + .content{
+            background-color: black;
+            color: white;
+            transition: all 1s;
+        }
+        #modeBtn::after{
+            content: "☀";
+        }
+        #modeCheckBox:checked + .content #modeBtn::after{
+            content: "🌙";
+        }
+    </style>
+</head>
+<body>
+    <input id="modeCheckBox" type="checkbox" >
+    <div class="content" > <label id="modeBtn" for="modeCheckBox"></label></div>
+   
+    
+</body>
+</html>

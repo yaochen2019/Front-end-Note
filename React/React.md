@@ -1,0 +1,32 @@
+
+babel将jsx的内容编译为React.createElement(type,props,children)创建一个element的对象树
+render接受两个参数一个对象树，还有一个真实的root容器container
+render基于container创建一个根Fiber节点它的children就是对象树
+并将它设置为下一个工作节点
+workLoop函数负责在浏览器空闲的时候在根节点上工作，工作的函数为performUnitOfWork
+其中performUnitOfWork的主要工作有三点
+1.element变为Dom节点(这里有个坑，组件类型分为Function component和HostComponent Function component是没有对应的DOM结构的,然后function
+  component的children是通过运行function才能得到它的children)
+2.为element的children创建fiber节点(对应 reconcile的过程)
+3.返回下一个工作单元(返回下一个工作单元的顺序是，有children返回children为下一个工作单元，不然就是sibling，再不然就是parent.sibling)
+
+reconcile过程具体
+拿到fiber.children为一个element对象记录dom信息,通过wipFiber.alternate.child拿到oldfiber
+根据oldfiber.type和element.type对比
+如果sametype则直接创建新的fiber可以直接复用oldfiber的节点并打上effectag为update
+如果！sametype而且element存在，就创建一个新的fiber节点并打上effectag为palcement
+如果！sametype而且oldfiber存在，就为deletion数组推入一个新的fiber节点，并为这个fiber节点的effectag打上delete
+
+
+等整个fiber树构建完成的时候我们会进入commit阶段
+commit从rootFiber开始，将rootfiber.child.dom挂载在rootfiber.dom
+根据在reconcile过程中往fiber节点上挂载不同的effectag来进行不同的提交方式
+effectag为placement的直接拿到他的parentFiber.dom.appendchild(fiber.dom)
+effectag为update的分为4步骤,移除旧事件，增加新事件,移除旧属性,增加新属性，最后appendchild
+effectag直接fiber.parent.dom.removechild(fiber.dom)
+
+
+ 
+# setState的更新机制
+在组件生命周期或React合成事件中，setState是异步
+在setTimeout或者原生dom事件中，setState是同步

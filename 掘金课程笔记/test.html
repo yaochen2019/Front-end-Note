@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script>
+        //实现前端监控
+        const entryTypes = ['paint', 'largest-contentful-paint', "first-input"]
+        const p = new PerformanceObserver(list => {
+            for (const entry of list.getEntries()) {
+                console.log(entry)
+            }
+        })
+        p.observe({ entryTypes })
+
+        //封装一个monitor来完成性能监控和数据上报功能。
+        //1. monitor起名字
+        //2. 监听能力
+        //3. 主动开启 而不是被动开启
+        //4. 数据收集后上报平台 
+
+        function createPerfMonitor(report) {
+            const name = "performance"
+            const entryTypes = ['paint', 'largest-contentful-paint', "first-input"]
+            function start() {
+                const p = new PerformanceObserver(list => {
+                    for (const entry of list.getEntries()) {
+                        console.log(entry);
+                        //上报
+                        report({name,entry})
+                    }
+                })
+                p.observe({ entryTypes })
+            }
+            return {name,start}
+        }
+
+        //监听普通JS执行报错
+        window.addEventListener("error", e => {
+            //e.error不为空的时候才是js error，否则可能为DOM类错误
+            if (e.error) {
+                console.log(e.error)
+            }
+        })
+
+        // throw new Error("11111")
+        //监听promise发生的 rejection错误
+        window.addEventListener("unhandledrejection", e => {
+            console.log(e.error)
+        })
+        //和上面类似封装一个monitor
+        function createJsErrorMonitor(report) {
+            const name = "js-error"
+            function start() {
+                window.addEventListener("error", (e) => {
+                    //e.error不为空的时候才是js error
+                    if (e.error) {
+                        report({name,data:{type:e.type,message:e.message}})
+                    }
+                })
+                window.addEventListener("unhandledrejection", e => {
+                    report({name,data:{type:e.type,reason:e.reason}})
+                })
+            }
+
+            return {name,start}
+        }
+
+        //静态资源的错误的监听
+        window.addEventListener("error", e => {
+            const target = e.target || e.srcElement;
+            if (!target) {
+
+            }
+            if (target instanceof HTMLElement) {
+                //可能是通过link标签，script标签创建的静态资源
+                let url
+                if (target.tagName.toLocaleLowerCase() === "link") {
+                    url = target.getAttribute("href")
+                } else {
+                    url = target.getAttribute("src")
+                }
+                console.log("异常", url)
+            }
+        }, true) //只能在捕获阶段去对错误进行捕获
+
+
+        // 请求异常写一个简易的hook函数
+        function hookMethod(obj, key, hookFunc) {
+            return (...params) => {
+                obj[key] = hookFunc(obj[key], ...params);
+            }
+        }
+
+        // hook xhr 对象 open方法逻辑注入
+        hookMethod(XMLHttpRequest.prototype, "open", (origin) =>
+            function (this, method, url) {
+                this.payload = {
+                    method,
+                    url,
+                }
+                //执行原函数逻辑
+                origin.apply(this, [method, url])
+            })()
+        
+        // send方法逻辑注入
+        hookMethod(XMLHttpRequest.prototype, "send", (origin) =>
+            function (this,...params) {
+                this.addEventListener("readystatechange",function(){
+                    if(this.readyState===4&&this.state>=400){
+                        this.payload.status = this.status
+                    }
+                })
+                //执行原函数逻辑
+                origin.apply(this, [method, url])
+            })()
+
+
+            //上报函数可以通过Navigator.sendbeacon()来实现
+
+    </script>
+</body>
+
+</html>

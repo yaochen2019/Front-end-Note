@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #ggk {
+            width: 400px;
+            height: 100px;
+            position: relative;
+        }
+
+        #ggk .jp {
+            width: 400px;
+            height: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            text-align: center;
+            color: deeppink;
+            font-size:50px;
+            line-height: 100px;
+        }
+
+        #ggk #canvas {
+            width: 400px;
+            height: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="ggk">
+        <div class="jp">谢谢惠顾</div>
+        <canvas width="400" height="100" id="canvas"></canvas>
+    </div>
+
+    <script>
+        let canvas = document.getElementById("canvas")
+        let ggkDom = document.querySelector("#ggk")
+        let ctx = canvas.getContext("2d")
+        ctx.fillStyle = "darkgray"
+        ctx.fillRect(0, 0, 400, 100)//目标图像
+        ctx.font = "20px 微软雅黑"
+        ctx.fillStyle = "#fff"
+        ctx.fillText("刮刮卡", 180, 40)
+
+        //设置isDraw = true 即为允许绘制
+        let isDraw = false
+        canvas.onmousedown = function () {
+            isDraw = true
+        }
+        //移动的时候绘制圆形，将源图像内的目标内容给清楚掉
+        canvas.onmousemove = function (event) {
+            if (isDraw) {
+                let x = event.pageX - ggkDom.offsetLeft;
+                let y = event.pageY - ggkDom.offsetTop;
+                ctx.globalCompositeOperation = "destination-out"
+                ctx.arc(x, y, 20, 0, 2 * Math.PI)
+                ctx.fill()
+
+            }
+
+        }
+        canvas.onmousedown = function () {
+            isDraw = true
+        }
+
+
+    </script>
+</body>
+
+</html>

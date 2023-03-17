@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <video width="800" height="" src="" controls="controls" ></video>
+    <script>
+        let video =  document.querySelector("video")
+        let canvas = document.querySelector("#canvas")
+        let ctx = canvas.getContext("2d")
+        let interId;
+        video.onplay = function(){
+            interId = setInterval(function(){
+                ctx.clearRect(0,0,800,600)
+                ctx.fillRect(0,0,800,600)
+                ctx.drawImage(video,0,0,800,600)//一帧一帧绘制出来
+            },16)
+        }
+        video.onpause = function(){
+            clearInterval(interId)
+        }
+    </script>
+</body>
+</html>

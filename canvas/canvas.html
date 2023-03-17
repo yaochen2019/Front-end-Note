@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas width="600" height="600" class="canvas">
+        您的浏览器不支持canvas 请升级
+    </canvas>
+    <script>
+        const cvs = document.querySelector(".canvas")
+        const cxt = cvs.getContext("2d")//上下文对象
+        console.log(cxt);
+        /* cxt.fillStyle = "aqua" //绘制填充颜色
+        cxt.rect(20,20,100,100)//绘制矩形
+        
+        cxt.fill()//渲染至网页
+
+        cxt.lineWidth = 10 //边宽度
+        cxt.strokeStyle = "salmon" 
+        cxt.stroke()
+ */     /* cxt.beginPath()
+        //绘制线段
+        cxt.moveTo(50,50)//起始点
+        cxt.lineTo(50,300)//经过摸个点
+        cxt.lineTo(300,300)//三个点折线
+        cxt.closePath();//绘制多条线段的时候指定开始和结束
+        //绘制路径
+        cxt.lineCap = "round"//起始点和终点变为圆角
+        cxt.strokeStyle = "aqua"
+        cxt.lineWidth = 10
+        cxt.stroke(); */
+
+        //绘制圆形
+        /* cxt.arc(300,300,100,0,Math.PI,true)//前面两个圆的起点，半径，画的角度从0到PI，逆时针还是顺时针默认false逆时针
+        cxt.stroke(); */
+
+
+        //实现弹幕效果
+        /* cxt.font = "40px 微软雅黑"
+        let x = 600
+        setInterval(function() {
+            cxt.clearRect(0,0,600,600)
+            x-=10;
+            if(x<-100){
+                x = 600
+            }
+            cxt.fillText("弹幕1",x,100);
+            cxt.strokeText("弹幕2",x,200)
+        },50) */
+
+        //绘制图像
+        //cxt.drawImage(图片对象，x位置，y位置)
+        /* let img = new Image()
+        img.src = ""
+        img.onload = function() {
+            cxt.drawImage(img,50,50)//图片载入完成之后再绘制
+
+        } */
+
+
+        
+
+        
+
+        
+  </script>
+    
+</body>
+</html>

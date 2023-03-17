@@ -1,0 +1,27 @@
+# xhr的优缺点
+本身是针对mvc编程，不符合mvvm浪潮
+xhr本身的架构不清晰，不符合关注分离的原则
+配置和调用的方式特别混乱
+基于事件的异步模型不友好
+
+
+# fetch
+fetch是基于promise设计的
+语法简洁，基于promise实现
+脱离了xhr
+缺点：
+fetch只对网络请求报错
+对500和400都当做成功的请求
+服务器返回400或500都不会reject
+只有网络错误的时候才会导致reject
+fetch默认不会添加cookie 需要添加配置项
+fetch不支持abort
+不支持超时控制
+fetch没有办法原生检测请求的进度而xhr可以
+
+# axios是一种基于promise封装的HTTP客户端请求
+浏览器端发起XMLHttpRequest请求
+node端发起http请求
+支持promise API 监听请求和返回
+自动转换json数据
+客户端抵御XSRF攻击
