@@ -14,7 +14,7 @@ var leastInterval = function(tasks, n) {
         equalNum++;//找和arr[0]次数相等的任务种数
         cur++;
     } 
-    return Math.max(res + equalNum, tasks.length);//选最大值
+    return Math.max(res + equalNum, tasks.length);//选最大的值
 };
 
 console.log(leastInterval(["A","A","A","A","B","B","B"],2));
